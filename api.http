@@ -1,0 +1,32 @@
+@host = http://localhost:8787
+
+GET {{host}}/auth
+
+
+###
+POST {{host}}/sign-in
+Content-Type: application/json
+
+{
+    "username":"suraj",
+    "password":"suraj1294"
+}
+
+
+###
+GET {{host}}/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cmFqIn0.awwD91Vu8-JRbRJFq7UWuIJo13Qwt5svLH7p7VT1KLg
+
+###
+GET {{host}}/users
+
+
+###
+POST {{host}}/users
+Content-Type: application/json
+
+{
+    "name":"sagar",
+    "email":"sagar@gmail.com",
+    "role":"user"
+}
