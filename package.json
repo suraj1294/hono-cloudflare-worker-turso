@@ -19,7 +19,7 @@
     "@libsql/client": "^0.3.4",
     "drizzle-orm": "^0.28.6",
     "drizzle-valibot": "^0.1.1",
-    "hono": "^3.6.0",
+    "hono": "^3.7.1",
     "uuid": "^9.0.1",
     "valibot": "^0.17.0"
   },
@@ -38,6 +38,6 @@
     "lorem-ipsum": "^2.0.8",
     "prettier": "^3.0.3",
     "tsx": "^3.12.10",
-    "wrangler": "^3.7.0"
+    "wrangler": "^3.9.0"
   }
 }

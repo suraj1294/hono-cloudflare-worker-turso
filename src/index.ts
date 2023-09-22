@@ -1,12 +1,10 @@
 import { Hono } from 'hono';
 import { serveStatic } from 'hono/cloudflare-workers';
-import { jwt } from 'hono/jwt';
-import { sign } from 'hono/utils/jwt/jwt';
-import { vValidator } from '@hono/valibot-validator';
-import { object, pick, string } from 'valibot';
+import { jwt, sign } from 'hono/jwt';
 
-import { LibSQLDatabase, drizzle } from 'drizzle-orm/libsql';
-import { createClient } from '@libsql/client';
+import { vValidator } from '@hono/valibot-validator';
+import { object, string } from 'valibot';
+import { LibSQLDatabase } from 'drizzle-orm/libsql';
 import { insertUserSchema, selectUserSchema, users } from '../drizzle/schema';
 import { Bindings } from './env';
 import getDbInstance from './db';
