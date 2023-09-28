@@ -7,12 +7,16 @@ function getDbInstance() {
   return function initiateDB(url = '', authToken = '') {
     if (!DBInstance) {
       console.log('new Instance');
-      DBInstance = drizzle(
-        createClient({
-          url,
-          authToken,
-        }),
-      );
+      try {
+        DBInstance = drizzle(
+          createClient({
+            url,
+            authToken,
+          }),
+        );
+      } catch (e) {
+        console.log('failed to connect to database');
+      }
 
       return DBInstance;
     }
