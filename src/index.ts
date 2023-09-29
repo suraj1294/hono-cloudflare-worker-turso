@@ -8,10 +8,14 @@ import { LibSQLDatabase } from 'drizzle-orm/libsql';
 import { insertUserSchema, selectUserSchema, users } from '../drizzle/schema';
 import { Bindings } from './env';
 import getDbInstance from './db';
+import { eq } from 'drizzle-orm';
+import { Client } from '@libsql/client/.';
+import * as schema from '../drizzle/schema';
 
 declare module 'hono' {
   interface ContextVariableMap {
-    db: LibSQLDatabase;
+    orm: LibSQLDatabase<typeof schema>;
+    libsql: Client;
   }
 }
 
@@ -26,7 +30,8 @@ console.log('called');
 
 app.use('*', async (c, next) => {
   const db = getDbInstance(c.env.DATABASE_URL, c.env.DATABASE_AUTH_TOKEN);
-  c.set('db', db);
+  c.set('orm', db.drizzleClient);
+  c.set('libsql', db.libSQLClient);
 
   await next();
 });
@@ -62,8 +67,27 @@ app.get('/auth/me', (c) => {
 });
 
 app.get('/users', async (c) => {
-  const allUsers = await c.get('db').select().from(users).all();
+  const allUsers = await c.get('orm').query.users.findMany();
+
   return c.json(allUsers);
+});
+
+app.get('/users/:userId', async (c) => {
+  const { userId } = c.req.param();
+
+  if (Number.isNaN(+userId)) {
+    return c.json({ message: 'bad request' }, 400);
+  }
+
+  const user = await c
+    .get('orm')
+    .query.users.findFirst({ where: eq(users.id, +userId) });
+
+  if (!user) {
+    return c.json({ message: 'user not found!' }, 404);
+  }
+
+  return c.json(user);
 });
 
 const insertUserRequest = insertUserSchema;
@@ -71,11 +95,17 @@ const insertUserResponse = selectUserSchema;
 
 app.post('/users', vValidator('json', insertUserRequest), async (ctx) => {
   const data = ctx.req.valid('json');
-  const user = await ctx.get('db').insert(users).values(data).returning().get();
+  const user = await ctx
+    .get('orm')
+    .insert(users)
+    .values(data)
+    .returning()
+    .get();
   return ctx.json(insertUserResponse._parse(user));
 });
 
 app.onError(async (err, c) => {
+  console.log(err);
   return c.json('failed to serve');
 });
 

@@ -15,7 +15,7 @@ Content-Type: application/json
 
 ###
 GET {{host}}/auth/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cmFqIn0.awwD91Vu8-JRbRJFq7UWuIJo13Qwt5svLH7p7VT1KLg
+Authorization: Bearer test
 
 ###
 GET {{host}}/users
