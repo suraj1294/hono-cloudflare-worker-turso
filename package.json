@@ -14,10 +14,8 @@
     "drop": "drizzle-kit drop"
   },
   "dependencies": {
-    "@hono/node-server": "^1.1.1",
     "@hono/valibot-validator": "^0.2.0",
     "@libsql/client": "^0.3.4",
-    "@types/bcryptjs": "^2.4.4",
     "bcryptjs": "^2.4.3",
     "drizzle-orm": "^0.28.6",
     "drizzle-valibot": "^0.1.1",
@@ -28,6 +26,7 @@
     "@cloudflare/workers-types": "^4.20230821.0",
     "@faker-js/faker": "^8.1.0",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@types/bcryptjs": "^2.4.4",
     "dotenv": "^16.3.1",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.49.0",
