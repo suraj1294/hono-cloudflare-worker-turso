@@ -13,7 +13,8 @@ export const users = sqliteTable(
   {
     id: integer('id').primaryKey().notNull(),
     name: text('name').notNull(),
-    email: text('email').notNull(),
+    password: text('password').notNull(),
+    email: text('email').unique().notNull(),
     role: text('role', { enum: ['admin', 'user'] }).notNull(),
     createdAt: integer('created_at', { mode: 'timestamp' }).default(
       sql`(strftime('%s', 'now'))`,
@@ -21,6 +22,7 @@ export const users = sqliteTable(
   },
   (users) => ({
     inameIdx: uniqueIndex('name_idx').on(users.name),
+    iemailIdx: uniqueIndex('email_idx').on(users.email),
   }),
 );
 
@@ -35,5 +37,6 @@ export const selectUserSchema = createSelectSchema(users);
 export const isUserValid = parse(insertUserSchema, {
   name: 'John Doe',
   email: 'johndoe@test.com',
+  password: 'test',
   role: 'admin',
 });

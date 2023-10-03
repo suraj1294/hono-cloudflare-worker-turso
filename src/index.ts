@@ -11,6 +11,7 @@ import getDbInstance from './db';
 import { eq } from 'drizzle-orm';
 import { Client } from '@libsql/client/.';
 import * as schema from '../drizzle/schema';
+import { compareHash } from './utils/encryption';
 
 declare module 'hono' {
   interface ContextVariableMap {
@@ -55,9 +56,31 @@ app.post('/sign-in', vValidator('json', authSchema), async (c) => {
   console.log(c);
   const body = c.req.valid('json');
 
-  const token = await sign({ username: body.username }, c.env.TOKEN_SECRET);
+  //check if user exists
+  const user = await c
+    .get('orm')
+    .query.users.findFirst({ where: eq(users.email, body.username) });
 
-  return c.json({ ok: 'true', data: token });
+  if (!user) {
+    return c.json({ ok: 'false', message: 'not found!' }, 404);
+  }
+
+  // check if password is correct
+  try {
+    const res = await compareHash(body.password, user.password);
+
+    if (res) {
+      const token = await sign({ username: body.username }, c.env.TOKEN_SECRET);
+      return c.json({ ok: 'true', data: token });
+    } else {
+      return c.json(
+        { ok: 'false', message: "username or password doesn't match" },
+        403,
+      );
+    }
+  } catch (e) {
+    return c.json({ ok: 'false', message: 'server error' }, 500);
+  }
 });
 
 app.get('/auth/me', (c) => {

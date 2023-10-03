@@ -8,8 +8,8 @@ POST {{host}}/sign-in
 Content-Type: application/json
 
 {
-    "username":"suraj",
-    "password":"suraj1294"
+    "username":"Donnell91@gmail.com",
+    "password":"use1"
 }
 
 
